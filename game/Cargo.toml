@@ -1,0 +1,9 @@
+
+[package]
+name = "bleeping_fyrox"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fyrox = { path = "../../Fyrox" }
+fyrox-ui = { path = "../../Fyrox/fyrox-ui" }
