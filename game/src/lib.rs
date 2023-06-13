@@ -142,8 +142,8 @@ fn create_text(ctx: &mut BuildContext, window_size: Vector2<f32>) -> Handle<UiNo
 
 fn foobar(text: Handle<UiNode>, context: PluginContext, size: &PhysicalSize<u32>){
   
-        let base_x = size.width as f32 / 6.0;
-        let base_y = size.height as f32 / 6.0;
+        let base_x = (size.width as f32 / 6.0).floor();
+        let base_y = (size.height as f32 / 6.0).floor();
 
         let ui = &context.user_interface;
 
@@ -162,6 +162,7 @@ fn foobar(text: Handle<UiNode>, context: PluginContext, size: &PhysicalSize<u32>
             MessageDirection::ToWidget,
             base_y * 4.0,
         ));
+        println!("size=X:{} Y:{}", base_x * 4.0, base_y * 4.0);
     
 }
 

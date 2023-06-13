@@ -1,36 +1,31 @@
-fn spread_rumor(source: &Person, target: &Person, rumor: &Rumor, game_state: &GameState) {
-    // Check if the rumor has already been heard by the target
-    if target.rumors.contains(rumor) {
-        return;
+const K1: f64 = 10.0;
+const K2: f64 = 10.0;
+
+
+type AgentID = usize;
+
+struct Person {
+    my_actual_opinions: Vec<f64>,
+    heard_opinions: HashMap<AgentID, Vec<f64>>,
+}
+
+struct World {
+    agents : Vec<Option<Person>>
+}
+impl World {
+
+    fn delta_x_listener_speaker(&mut self, l_index: AgentID, s_index: AgentID, opinion: f64, o_index: AgentID) -> f64 {
+        let l = swap_out(self.agents, l_index, None);
+        let s = swap_out(self.agents, s_index, None);
+        let x_o_s_prime = l.declared_opinions[s_index][o_index];
+        let x_l_o = l.actual_opinions[o_index];
+        (x_l_o * x_o_s_prime) / K1;
+        self.agents[l_index] = l;
+        self.agents[s_index] = s;
+    }
     }
 
-    // Calculate the probability of the rumor being spread
-    let spread_probability = rumor.spread_chance * (1.0 - target.reputation) * source.reputation;
-
-    // Generate a random number between 0 and 1
-    let random_number = rand::random::<f32>();
-
-    // Check if the rumor is spread to the target
-    if random_number < spread_probability {
-        // Add the rumor to the target's set of heard rumors
-        target.rumors.insert(rumor.clone());
-
-        // Update the target's reputation
-        target.reputation += rumor.spread_chance * rumor.reputation_impact;
-
-        // Update the target's opinion based on the rumor's impact on opinion
-        target.opinion += rumor.opinion_impact;
-
-        // Decay the rumor over time
-        rumor.spread_chance *= rumor.decay_rate;
-
-        // Spread the rumor to the target's friends
-        for friend in target.friends.iter() {
-            spread_rumor(target, friend, rumor, game_state);
-
-            // Update the friend's opinion of the target based on opinion dynamics model
-            let opinion_change = (target.opinion - friend.opinion) * game_state.opinion_spread_rate;
-            friend.opinion += opinion_change * rumor.spread_chance * rumor.reputation_impact;
-        }
-    }
+fn swap_out<K, T>(selfie:&mut Vec<T>, idx: usize, v:T) -> T {
+    selfie.push(v);
+    selfie.swap_remove(idx)
 }
