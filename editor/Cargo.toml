@@ -5,6 +5,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-fyrox = { path = "../../Fyrox" }
-fyroxed_base = { path = "../../Fyrox/editor" }
+fyrox = "0.30.0"
+fyroxed_base = "0.17.0"
 bleeping_fyrox = { path = "../game" }
