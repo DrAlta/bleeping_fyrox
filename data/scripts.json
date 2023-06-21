@@ -1,0 +1,825 @@
+{
+    "script1":[
+        {
+            "add_quest_script":"script2",
+            "add_quest_name":"Script: The Sequal"
+        },
+        {
+            "cue":"LoadTent"
+        },
+        {
+            "end":"script1"
+        }
+    ],
+    "Prologue":[
+        {
+            "cue":"prologue1"
+        },
+        {
+            "character":"Narrator",
+            "text":"Tap tap tap.",
+            "wait":1.5
+        },
+        {
+            "character":"ProtagThought",
+            "text":"The sound of the pencil on paper, busily transcribing down the particulars of the wildberry flowers we were observing. My mentor and teacher, Erland Waxworth, continued scribbling. Her slightly greying eyes noticed the minute details of the flower, and her pencil scratched slowly across the parchment as it immortalised the particular orientation of the pollen kernels forever into her field notes."
+        },
+        {
+            "character":"Waxworth",
+            "text":"You see, how the pistol and stamen stay separated. The pollen produced on the stamen is taken by the bees, and carried to the stamen of another plant. Such is the nature of reproduction."
+        },
+        {
+            "character":"Narrator",
+            "text":"Erland pointed with her pencil clutched between crooked fingers."
+        },
+        {
+            "character":"Protag",
+            "text":"Yes, Mentor Waxworth! So the bees do the, err… breeding for the flowers?"
+        },
+        {
+            "cue":"prologue2"
+        },
+        {
+            "character":"ProtagThought",
+            "text":"I noted the details in my own notebook as she pointed them out. Even as old as she was, Erland was sharp as a tack, and a bottomless font of knowledge about the world around her."
+        },
+        {
+            "character":"Waxworth",
+            "text":"Hah; I suppose so. They sure have it figured out, flowers. No need for awkward dates or embarrassing silences."
+        },
+        {
+            "character":"Narrator",
+            "text":"Erland stood up slowly, gritting her teeth as her knees straightened."
+        },
+        {
+            "character":"Waxworth",
+            "text":"Nope; they just get to smile sweetly at a nearby bee, and it does it all for them! Speaking of which; You’re young! You must be out trying to find love all the time, right? Or at least some pretty thing… Oh I remember when I was a young hot blooded upstart…"
+        },
+        {
+            "character":"Protag",
+            "text":"What! Master! I… "
+        },
+        {
+            "character":"Narrator",
+            "text":"I turned away from my mentor, fixing my gaze on the notebook and busying myself as she gazed off into the distance."
+        },
+        {
+            "character":"Narrator",
+            "text":"The sound of bees filled the silence, until suddenly… A light sigh, and then a thump. I looked up, and saw Mentor Waxworth lying on the grass, her eyes rolled back in her head."
+        },
+        {
+            "cue":"prologue3"
+        },
+        {
+            "character":"Narrator",
+            "text":""
+        },
+        {
+            "cue":"prologue4"
+        },
+        {
+            "character":"Narrator",
+            "text":"I open my eyes. It had been six months, and I still see that day in my dreams, or nightmares, rather. Things had been hard since Mentor Waxworth had fallen. Since then, she hadn’t been the same. She looked through things that were right in front of them. She forgot where she was. Sometimes it seemed like she thought she was living years ago, talking to people who had died or moved away."
+        },
+        {
+            "cue":"prologue5"
+        },
+        {
+            "character":"ProtagThought",
+            "text":"The doctors said it might be something simple. I thought she’d be better by now… But just like yesterday, and the day before, and every day for the last six months, It’ll be the same...."
+        },
+        {
+            "character":"Narractor",
+            "text":"I knock on Erland’s door, and let myself in."
+        },
+        {
+            "character":"Narrator",
+            "text":"As I walked into the dimly lit room, I could see Mentor Waxworth sitting in a chair, her eyes fixed on nothing in particular. My heart sank as I realized the gravity of the situation."
+        },
+        {
+            "character":"Erland",
+            "text":"Oh! Are you my new Student? I’m so excited to work with you! Just as soon as these doctors let me out of here, we’ll head straight into the field! There’s so much to do and so much to see!"
+        },
+        {
+            "character":"Narrator",
+            "text":"Erland, my mentor, was suffering from dementia, and it was up to me to take over her duties in studying the Aequis, the native people of this land."
+        },
+        {
+            "character":"Protag",
+            "text":"Oh, No, Mentor Waxworth; we met years ago. You had an accident a little while ago. You’ve been teaching me. Remember, my name is"
+        },
+        {
+            "action":"Get Protag's name"
+        },
+        {
+            "character":"Waxworth",
+            "text":"Oh… Hmm. No, I’d definitely remember a name like that. Nope, I’m certain we’ve never met."
+        },
+        {
+            "character":"ProtagThought",
+            "text":"It had been like this every day since the accident. Repeating the same conversation. The woman I’d learned so much from…"
+        },
+        {
+            "character":"Protag",
+            "text":"We have met already, Mentor Waxworth. But that doesn’t matter too much; Do you remember you’re going on a trip today? Back to the capital? There are doctors there who might be able to help you get back to…Well, who might be able to help you."
+        },
+        {
+            "character":"Waxworth",
+            "text":"To the capital? Oh. Hmm. No, I don't think so. I’ve got so much work left to do here before returning to the capital. I’m just waiting for my new Apprentice to arrive… Who are you?"
+        },
+        {
+            "character":"Narrator",
+            "text":"As the realization that Erland's condition might be irreversible washed over me, my vision blurred, and I struggled to keep my composure."
+        },
+        {
+            "character":"Protag",
+            "annotation":"trying to keep my emotions in check.",
+            "text":"Erland, it's me, your apprentice."
+        },
+        {
+            "character":"Narrator",
+            "text":"Her eyes flickered with recognition as she looked up at me."
+        },
+        {
+            "character":"Protag",
+            "text":"Mentor Waxworth? Do you remember?"
+        },
+        {
+            "character":"Waxworth",
+            "text":"Ah, there you are. There'll be a lot of work for you to do while I'm undergoing treatment. Hopefully, the doctors will be able to cure this... whatever is happening to me."
+        },
+        {
+            "character":"Narrator",
+            "text":"I could feel the lump in my throat growing as I fought back tears."
+        },
+        {
+            "character":"Protag",
+            "text":"You’re here; every time you drift away, it…"
+        },
+        {
+            "character":"Waxworth",
+            "annotation":"her voice soft and distant.",
+            "text":"Yes, yes, I'm here,"
+        },
+        {
+            "character":"Waxworth",
+            "annotation":"Her voice becoming stronger and more resolute.",
+            "text":"Now, remember, you've got to make allies out there. The land is inhospitable, and yet the Aequae have survived for generations. Find the Aequis and learn from them. Learn everything you can. Be open and willing to receive everything they have to give you. Be a vessel for their knowledge."
+        },
+        {
+            "character":"Protag",
+            "annotation":"feeling overwhelmed I speak out.",
+            "text":"Mentor, I don't know if I can...."
+        },
+        {
+            "character":"Waxworth",
+            "text":"Well, neither do I. But I know you’ll try. I know you have a big heart, and I know you will make allies and friends with those who you come across. Hell, you might even find love out there on the sand. That's why we have the mentorship program. The most important thing, though. I'll always be there to guide you."
+        },
+        {
+            "character":"Protag",
+            "text":"I nodded, feeling a sense of comfort in her words."
+        },
+        {
+            "character":"Waxworth",
+            "annotation":"Her voice is full of encouragement.",
+            "text":"Yes indeed! Enjoy yourself! There's plenty of time for studying and research. For now, remember to enjoy your youth."
+        },
+        {
+            "character":"Narrator",
+            "text":"I quickly bent down and gave Mentor Waxworth a tight hug."
+        },
+        {
+            "character":"Waxworth",
+            "text":"I know it’s overwhelming..."
+        },
+        {
+            "character":"Narrator",
+            "text":"Warworth wraps her arms around me and pats my back lightly."
+        },
+        {
+            "character":"Waxworth",
+            "text":"...geting a famous researcher like me as your mentor."
+        },
+        {
+            "character":"Waxworth",
+            "text":"My stomach dropped so fast I felt dizzy and wanted to throw up."
+        },
+        {
+            "character":"Waxworth",
+            "annotation":"feeling your biceps",
+            "text":"Wow! You’re strong!"
+        },
+        {
+            "character":"Protag",
+            "text":"Mentor Waxworth!?"
+        },
+        {
+            "character":"Waxworth",
+            "text":"Mentor? Hm, I don’t know about that… Why don't you call me 'Mommy'?."
+        },
+        {
+            "character":"Narrator",
+            "text":"Waxworth presses herself against you, and you feel her heartbeat against your chest."
+        },
+        {
+            "character":"Waxworth",
+            "text":"I do my yoga twice a day, and go hiking every weekend. You just lie back, I’ll do all the work."
+        },
+        {
+            "character":"Narrator",
+            "text":"She slips her robe down her shoulders."
+        },
+        {
+            "character":"ProtagThought",
+            "text":"Tan and lithe, she is still beautiful; even in her age."
+        },
+        {
+            "character":"Protag",
+            "text":"Wait! Erland! It’s me! Focus on trying to remember."
+        },
+        {
+            "character":"Waxworth",
+            "text":"I’d much rather focus on this."
+        },
+        {
+            "character":"Narrator",
+            "text":"She slips her hand down between my legs, feeling me stiffen beneath her skillful fingers."
+        },
+        {
+            "character":"Protag",
+            "text":"Wait wait! I can’t! I’ve... I’ve got to go."
+        },
+        {
+            "character":"Narrator",
+            "text":"I turn and hurry out of the room, as I glance down the hallway I see the palanquin, come to take Erland Waxworth back to the city, looking for a cure."
+        },
+        {
+            "character":"Narrator",
+            "text":"Red faced and breathing heavily, I turn my eyes downwards and rush in the opposite direction."
+        },
+        {
+            "add_quest_script":"Pharaoh1",
+            "add_quest_name":"Pharaoh Quest"
+        },
+        {
+            "cue":"LoadTent"
+        },
+        {
+            "offer_topics":"open_quests",
+            "exit":true
+        }
+    ],
+    "Pharaoh1":[
+        {
+            "cue":"LoadThroneRoomCutscene"
+        },
+        {
+            "cue":"Pharaoh quest:Started"
+        },
+        {
+            "animation":"Player enters the Throne Room, with the Pharaoh being blurred out in the background"
+        },
+        {
+            "character":"Narrator",
+            "text":"You enter the large, sand-encrusted throne room, partially amazed by its massive size, and partially amazed by its structural integrity, since it had clearly been uncared for many years."
+        },
+        {
+            "character":"Narrator",
+            "text":"However, something else catches your eye, something that, while unexpected, is certainly not unwanted."
+        },
+        {
+            "cue":"Pharaoh quest cutscene1"
+        },
+        {
+            "animation":"Zoom in on Pharaoh, who remains seated on her massive throne, one leg crossed over the other. "
+        },
+        {
+            "end":"Pharaoh1"
+        }
+    ],
+    "Pharaoh1B":[
+        {
+            "character":"ProtagThought",
+            "text":"A Pharaoh, one of the mightiest and most potently powerful of all Aequis, known to control vast empires in the sands before eventually losing their power. Why?"
+        },
+        {
+            "character":"Narrator",
+            "text":"You do not know;but hey! Now's the perfect time to ask."
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh cocks her head slightly, seemingly just now noticing you"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Is that a visitor I see? In my throne room?"
+        },
+        {
+            "character":"Narrator",
+            "text":"Her eyes narrow"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Unaccompanied by guards, like they should be?"
+        },
+        {
+            "character":"Narrator",
+            "text":"You freeze at the Pharaoh's harsh words, but quickly shake it off; These Aequis are known for being haughty and belligerent, after all, and even without their empire, this still holds true."
+        },
+        {
+            "character":"Narrator",
+            "text":"All you need to do is act polite and make sure her demands are met, and you should be able to commune much more equally with them."
+        },
+        {
+            "character":"ProtagThought",
+            "text":"Maybe."
+        },
+        {
+            "character":"Protag",
+            "text":"Hello, fair and noble Pharaoh! I am [Name], and I have traveled across the sands for many moons to meet one such as yourself!"
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh shifts forward in her throne, showing off her cleavage more"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Oh really? Then tell me, [Name], what exactly did you hope to gain from our… meeting?"
+        },
+        {
+            "character":"Protag",
+            "text":"Knowledge, of course! Of the lands, your empire, your kind's unique attributes! All of these are extremely important for a researcher like myself."
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh leans backwards with an interested expression"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I see, I see indeed! A researcher, travelling to my throne room for knowledge. Oh, how I missed such delightful conferences; Very well."
+        },
+        {
+            "character":"Narrator",
+            "text":"She leans forward"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I will give you a very… in-depth session with you, should you meet my one, simple demand. "
+        },
+        {
+            "character":"ProtagThought",
+            "text":"And… there it is"
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh leans back"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Many years ago, I was given a very special possession from a consort, who, during our rather… passionate relationship, gave me a special sapphire amethyst artefact; The River Seal. "
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I need it back before I am to entertain your notion of a meeting; Can you do that for me?"
+        },
+        {
+            "choice":[
+                {
+                    "jump":"PharaohWhereIsIt",
+                    "text":"Of course! Just.. where is it?"
+                },
+                {
+                    "jump":"PharaohRiverSealKa",
+                    "text":"The River Seal?"
+                }
+            ]
+        }
+    ],
+    "PharaohWhereIsIt":[
+        {
+            "character":"Narrator",
+            "text":"Pharaoh laughs, arching her back somewhat"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Well, if I knew that, I could just go fetch it myself!"
+        },
+        {
+            "character":"Narrator",
+            "text":"She leans back again"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Alas, I have not seen it for many years; Last I recall having it, I was bathing in the Oasis, just beyond my temple's gates. There it may still remain, although no doubt covered in sand by this point."
+        },
+        {
+            "character":"Narrator",
+            "text":"She leans forward, winking "
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Do make sure to wash it when you find it."
+        },
+        {
+            "character":"Protag",
+            "text":"Ok, first off, a spade; Second, it's time to dig out the Oasis."
+        },
+        {
+            "cue":"QuestLog:Pick up your spade"
+        },
+        {
+            "jump":"PharaohOasis"
+        }
+    ],
+    "PharaohRiverSealKa":[
+        {
+            "character":"Narrator",
+            "text":"Pharaoh leans forward"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Yes; It is a powerful item, capable of stopping the flow of a river or stream with minimal effort. I used it long ago to… quell certain fires that broke out."
+        },
+        {
+            "character":"Protag",
+            "text":"What fires need putting out?"
+        },
+        {
+            "character":"Narrator",
+            "text":"She laughs"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Oh… you'll see, if you retrieve it."
+        },
+        {
+            "jump":"PharaohWhereIsIt"
+        }
+    ],
+    "PharaohOasis":[
+        {
+            "cue":"LoadOasis"
+        },
+        {
+            "character":"Protag",
+            "text":"Ok, River Seal, River Seal"
+        },
+        {
+            "character":"Narrator",
+            "text":"You look around, digging through the silt-like sands of the Oasis, as you keep an eye out for anything particularly purpley and shiny."
+        },
+        {
+            "character":"Protag",
+            "text":"This is gonna take a while, isn't it…"
+        },
+        {
+            "character":"Narrator",
+            "text":"And a while it did indeed take, as nearly an hour  of Oasis-combing and later, no artefact was in hand."
+        },
+        {
+            "character":"Narrator",
+            "text":"Feeling a bit despondent, you turn, ready to make your way back to the Pharaoh, but something catches your eye… "
+        },
+        {
+            "cue":"MiniGameFindingTheRiverSeal"
+        },
+        {
+            "jump":"AfterFindingTheRiverSeal"
+        }
+    ],
+    "AfterFindingTheRiverSeal":[
+        {
+            "cue":"LoadThroneRoomCutscene"
+        },
+        {
+            "cue":"Talk to Pharaoh"
+        },
+        {
+            "animation":"Close up of the River Seal"
+        },
+        {
+            "character":"ProtagThought",
+            "text":"Amethyst… this is it! The River Seal! It's… its"
+        },
+        {
+            "character":"Narrator",
+            "text":"You pick up the Seal, and look it over quizzically"
+        },
+        {
+            "character":"Protag",
+            "text":"A buttplug. She sent me to find a buttplug."
+        },
+        {
+            "character":"Narrator",
+            "text":"You facepalm"
+        },
+        {
+            "character":"ProtagThought",
+            "text":"She wasn't talking about an actual river, was she…"
+        },
+        {
+            "character":"Narrator",
+            "text":"Somewhat amused but mildly embarrassed at your lack of social cues, you move to the Oasis, giving the already sparkling Seal a thorough cleaning in the nearby crystalline waters, before readying yourself to head back to the Empress. "
+        },
+        {
+            "jump":"Pharaoh2"
+        }
+    ],
+    "Pharaoh2":[
+        {
+            "cue":"Pharaoh quest:RiverSealReturned"
+        },
+        {
+            "character":"Narrator",
+            "text":"You enter the throne room, a slight blush across your face as you grasp the Seal, careful as to not make it any more awkward than you're holding a royal buttplug. "
+        },
+        {
+            "character":"Narrator",
+            "text":"The Pharaoh leans forward as you arrive, excitement sparking in her eyes"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Well, if it isn't my little researcher, back from his quest; And would you look at that!"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"My Seal, clutched in your hand. May I?"
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh has her hand outstretched"
+        },
+        {
+            "character":"Narrator",
+            "text":"You step forward, placing the “artefact” on her hand before stepping back, careful not to look too long at her rather heavy, exposed chest. "
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh inspects the Seal"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Heavens, it has been far too long, my little amethyst jewel…"
+        },
+        {
+            "animation":"Animated scene of Pharaoh placing the Seal on her throne, standing up slightly before sitting down on it, with a face of mild ecstasy gracing her face"
+        },
+        {
+            "character":"Narrator",
+            "text":"A mix of embarrassment and arousal floods through you as you watch the Pharaoh lower herself onto the buttplug, suddenly feeling a flash of jealousy that you couldn't take its place."
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh rights herself on her throne, sitting cross-legged once more, but with a sense of enjoyment in her eyes"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Ahhh, how I've missed this feeling… "
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Now, about that meeting I promised; Since you delivered my gift so quickly, and so graciously, I have decided that I shall add an additional payment to our deal."
+        },
+        {
+            "character":"Narrator",
+            "text":"You gulp, hearing the lustful undertones of your voice"
+        },
+        {
+            "character":"Narrator",
+            "text":"Pharaoh leans forward"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I shall join you in your Caravan beyond the gates, answering any and all questions you might have, big or small."
+        },
+        {
+            "character":"Narrator",
+            "text":"You stare at her, confused"
+        },
+        {
+            "character":"Protag",
+            "text":"You know of my Caravan?"
+        },
+        {
+            "character":"Narrator",
+            "text":"She laughs."
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Of course I do, my little researcher; I know everything that transpires in the sands surrounding my empire."
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I know of your Caravan, I know of your fascination, and I know…"
+        },
+        {
+            "character":"Narrator",
+            "text":"She stares at you again"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Of your desires."
+        },
+        {
+            "character":"Narrator",
+            "text":"You gulp, standing completely rigid as you fight to maintain your composure."
+        },
+        {
+            "character":"Narrator",
+            "text":"She leans back"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Now that we have that settled, I will be moving to your tent as soon as I can; I do hope to have a lounge laid out for me when I arrive?"
+        },
+        {
+            "character":"Narrator",
+            "text":"You nod"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Good boy; Then I'll see you soon, my little Name. I'm sure our meetings will be very eventful."
+        },
+        {
+            "cue":"LoadTent"
+        },
+        {
+            "end":"Pharaoh2"
+        }
+    ],
+    "PharaohDoNotDisturb":[
+        {
+            "character":"Narrator",
+            "text":"I probably shouldn't come in till I find that River Seal; She didn't seem like the type to be particularly happy to see someone empty-handed. "
+        },
+        {
+            "end":"Travel failed"
+        }
+    ],
+    "PharaohFirstTime":[
+        {
+            "cue":"Pharaoh quest:JoinedHarem"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Oh, if it isn't my little researcher, back to see your newest arrival?"
+        },
+        {
+            "character":"Narrator",
+            "text":"She lays her head on her hand, which is propped on one of the chairs"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I must say, I have gotten rather comfortable in your abode, humble it may be; Maybe it's these lovely cushions, surely imported?"
+        },
+        {
+            "character":"Protag",
+            "text":"I… uh… I'm not sure. This was just the basic set-up given to me by the administration…"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"She perks up"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"The administration? So you're not just a wandering researcher afterall… Not that I mind."
+        },
+        {
+            "character":"Narrator",
+            "text":"She looks at you hungrily"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Afterall, information is what you seek, regardless of whom you serve? And, my dear researcher, I am positively bursting with information",
+            "note":"pushes out her breasts to emphasize bursting"
+        },
+        {
+            "jump":"PharoahTopics"
+        }
+    ],
+    "PharoahTopics":[
+        {
+            "offer_topics":"Pharaoh",
+            "exit": true
+        }
+    ],
+    "PharaohAgeOfEmpire":[
+        {
+            "character":"Narrator",
+            "text":"She looks at you quizzically"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"How long… Hmmm, I'm not too terribly certain. Time is an extremely fickle thing for an Aequis with a lifespan such as mine, I find it so hard to grasp it. Although…"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I'd say I must have spent around 100 years building up the entirety of of the borders, negotiating, and ensuring my court would be filled with the right followers."
+        },
+        {
+            "character":"Narrator",
+            "text":"She looks at you proudly"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Does that work for an answer?"
+        },
+        {
+            "character":"Narrator",
+            "text":"You shrug slightly"
+        },
+        {
+            "character":"Protag",
+            "text":"Not really, but it's valuable information nonetheless. "
+        }
+    ],
+    "PharaohSandControl":[
+        {
+            "character":"Narrator",
+            "text":"She chuckles"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Not the sand, my little researcher; The <i>desert</i>"
+        },
+        {
+            "character":"Narrator",
+            "text":"She holds out her hand nonchalantly and summons a small desert whirlwind"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Everything that happens in my stake of the desert is under my control; I can shift the sands, yes, but I can move the earth, bring forth groundwater, summon armies long since dead."
+        },
+        {
+            "character":"Narrator",
+            "text":"She looks at you again"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"There is little I cannot do here"
+        },
+        {
+            "character":"Protag",
+            "text":"Oh… that’s mildly terrifying"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Yes, I suppose it is for most. But fret not, my little researcher."
+        },
+        {
+            "character":"",
+            "text":"She crosses her arms and pushes up her breasts"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"I am very gentle with my subjects."
+        }
+    ],
+    "PharaohEctothermic":[
+        {
+            "character":"Narrator",
+            "text":"She looks at you quickly"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Ec-to-therm-ic?"
+        },
+        {
+            "character":"Protag",
+            "text":"Uh… can't produce your own body heat"
+        },
+        {
+            "character":"Narrator",
+            "text":"She nods affirmatively "
+        },
+        {
+            "character":"Pharaoh",
+            "text":"Ah, I see; Your scientific tongue confused me. But yes, I am indeed “ectothermic”. I grow cold and warm dependent on the temperature around me"
+        },
+        {
+            "character":"Narrator",
+            "text":"She leans forward with a hungry expression"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"It is why I so love the company of your humans; So warm, so soft. The perfect pillow for one such as I."
+        },
+        {
+            "character":"Narrator",
+            "text":"You gulp "
+        },
+        {
+            "character":"Protag",
+            "text":"Umm… I'm glad my species can be of service?"
+        },
+        {
+            "character":"Narrator",
+            "text":"She chuckles"
+        },
+        {
+            "character":"Pharaoh",
+            "text":"You’re so welcome, my little researcher."
+        }
+    ]
+
+}
