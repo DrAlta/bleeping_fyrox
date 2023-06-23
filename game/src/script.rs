@@ -14,68 +14,71 @@ impl Scripts {
     pub fn get(&self, key: &str) -> Option<&Vec<ScriptItem>> {
         self.0.get(key)
     }
-    pub fn get_blurp(&self, key: &str, index: usize) -> Option<&ScriptItem> {
+    pub fn get_item(&self, key: &str, index: usize) -> Option<&ScriptItem> {
         self.0.get(key)?.get(index)
     }
     pub fn keys(&self) -> Keys<'_, String, Vec<ScriptItem>> {
         self.0.keys()
     }
+    pub fn has_script(&self, script:&str) ->bool {
+        self.0.contains_key(script)
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct Action {
-    action: String
+    pub action: String
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct AddQuest {
-    add_quest_script: String,
-	add_quest_name: String,
+    pub add_quest_script: String,
+	pub add_quest_name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct Animation {
-    animation: String,
+    pub animation: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct Blurp {
-    character: String,
-    text: String,
-    annotation: Option<String>,
-    wait: Option<f64>,
+    pub character: String,
+    pub text: String,
+    pub annotation: Option<String>,
+    pub wait: Option<f64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct Cue {
-    cue: String
+    pub cue: String
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct Choice {
-    choice: Vec<ChoiceOption>
+    pub choice: Vec<ChoiceOption>
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct ChoiceOption {
-    jump: String,
-    text: String,
+    pub jump: String,
+    pub text: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct End {
-    end: String
+    pub end: String
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct Jump {
-    jump: String
+    pub jump: String
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect, Default)]
 pub struct OfferTopics {
-    offer_topics: String,
-    exit: bool
+    pub offer_topics: String,
+    pub exit: bool
 }
 
 #[derive(Serialize, Deserialize, Debug, Visit, Reflect)]

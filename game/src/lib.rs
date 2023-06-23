@@ -4,6 +4,8 @@ pub mod topic_list;
 
 pub mod script;
 
+pub mod dialogue;
+
 /*
 mod script_resource;
 use script_resource::{ScriptResource, ScriptResourceLoader};
@@ -11,11 +13,12 @@ use script_resource::{ScriptResource, ScriptResourceLoader};
 pub mod grid;
 
 mod nine_patch;
+use dialogue::show_dialogue;
 use nine_patch::{create_nine_box, center_widget_builder, NinePatchBuilder};
 
 use fyrox::{
     asset::manager::ResourceManager,
-    core::{algebra::Vector2, color::Color, pool::Handle, rand::Rng},
+    core::{algebra::Vector2, color::Color, pool::Handle, log::Log},
     dpi::PhysicalSize,
     engine::GraphicsContext,
     event::{Event, WindowEvent},
@@ -26,10 +29,9 @@ use fyrox::{
         stack_panel::StackPanelBuilder,
         widget::{WidgetBuilder, WidgetMessage},
         BuildContext,
-        UiNode, text::{TextBuilder, TextMessage}, formatted_text::WrapMode,
+        UiNode, text::{TextBuilder}, formatted_text::WrapMode,
     },
     plugin::{Plugin, PluginConstructor, PluginContext, PluginRegistrationContext},
-    rand::thread_rng,
     scene::Scene,
 };
 pub struct GameConstructor;
@@ -88,7 +90,7 @@ impl PluginConstructor for GameConstructor {
     }
 }
 
-struct ScriptPos {
+pub struct ScriptPos {
     pub script: String,
     pub index: usize,
 }
@@ -143,45 +145,11 @@ impl Plugin for Game {
             if message.destination() == self.button {
                 println!("pressed!");
                 // Generate random position in the window.
-                if let GraphicsContext::Initialized(ref graphics_context) = context.graphics_context
-                {   let start = ScriptPos { script: "Pharaoh1".to_string(), index: 0 };
+                if let GraphicsContext::Initialized(ref _graphics_context) = context.graphics_context {
                     let ui = &context.user_interface;
-                    let ScriptPos { script, index }= self.current_script_pos.as_ref().unwrap_or(&start);
-                    let blurp = match self.scripts.get_blurp(script, index.clone()).unwrap() {
-                        script::ScriptItem::Action(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::AddQuest(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::Animation(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::Blurp(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::Choice(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::Cue(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::End(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::Jump(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                        script::ScriptItem::OfferTopics(blurp) => {
-                            format!("{blurp:?}")
-                        }
-                    };
-                    ui.send_message(TextMessage::text(
-                        self.text,
-                        MessageDirection::ToWidget,
-                        blurp,
-                    ));
-                    self.current_script_pos= Some(ScriptPos { script:script.to_string(), index: index.clone() + 1 })
+                    let start = ScriptPos { script: "Pharaoh1".to_string(), index: 0 };
+                    let script_pos= self.current_script_pos.as_ref().unwrap_or(&start);
+                    process_script(script_pos, &self.scripts, ui, self.text);
                 }
             }
         }
@@ -211,7 +179,7 @@ fn foobar(text: Handle<UiNode>, context: PluginContext, size: &PhysicalSize<u32>
     ));
 }
 
-
+#[allow(dead_code)]
 fn create_stack_panel(
     ctx: &mut BuildContext,
     resource_manager: &ResourceManager,
@@ -314,5 +282,61 @@ fn create_stack_panel(
             ),
     )
     .build(ctx)
+}
+
+pub fn process_script(script_pos: &ScriptPos, scripts: &script::Scripts, ui: &&mut fyrox::gui::UserInterface, dialogue_box:Handle<UiNode>) -> Option<ScriptPos>{
+    let mut current_script = script_pos.script.clone();
+    let mut next_index = script_pos.index;
+    loop {
+        let Some(item) =scripts.get_item(&current_script, next_index) else {
+            Log::info(format!("Ran off the end of {} as {}", &script_pos.script, &script_pos.index));
+            return None;
+        };
+        next_index += 1;
+        match item {
+            script::ScriptItem::Action(blurp) => {
+                
+            }
+            script::ScriptItem::AddQuest(blurp) => {
+                
+            }
+            script::ScriptItem::Animation(blurp) => {
+                
+            }
+            script::ScriptItem::Blurp(blurp) => {
+                show_dialogue(ui, dialogue_box, blurp.text.clone());
+                break;
+            }
+            script::ScriptItem::Choice(blurp) => {
+                
+            }
+            script::ScriptItem::Cue(blurp) => {
+                
+            }
+            script::ScriptItem::End(blurp) => {
+                
+            }
+            script::ScriptItem::Jump(jump) => {
+                if scripts.has_script(&jump.jump) {
+                    Log::info(format!(
+                        "jumping to script {} from script {} @{}.", 
+                        current_script, 
+                        jump.jump, 
+                        next_index - 1
+                    ));
+                    current_script = jump.jump.clone();
+                    next_index = 0;
+                } else {
+                    Log::err(format!("tried to jump to non existant script {}.", jump.jump));
+                    return None;
+                }
+            }
+            script::ScriptItem::OfferTopics(blurp) => {
+               
+            }
+        }
+    }
+    Some(ScriptPos { script: current_script, index: next_index })
+ 
 }
 
