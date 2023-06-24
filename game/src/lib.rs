@@ -13,6 +13,7 @@ use script_resource::{ScriptResource, ScriptResourceLoader};
 pub mod grid;
 
 mod nine_patch;
+mod nine_patch_widget;
 use dialogue::show_dialogue;
 use nine_patch::{create_nine_box, center_widget_builder, NinePatchBuilder};
 
@@ -32,7 +33,7 @@ use fyrox::{
         UiNode, text::{TextBuilder}, formatted_text::WrapMode,
     },
     plugin::{Plugin, PluginConstructor, PluginContext, PluginRegistrationContext},
-    scene::Scene,
+    scene::Scene, resource::texture::Texture, utils::into_gui_texture,
 };
 pub struct GameConstructor;
 
@@ -47,11 +48,13 @@ impl PluginConstructor for GameConstructor {
         let window_size = context.user_interface.screen_size();
         println!("screen_size:{}", window_size);
         let ctx = &mut context.user_interface.build_ctx();
-        let button = ButtonBuilder::new(WidgetBuilder::new())
+        let button = ButtonBuilder::new(WidgetBuilder::new()
+        .with_desired_position(
+            Vector2::new(50.0, 50.0)))
             .with_text("Click me!")
             .build(ctx);
         //let text = create_text(ctx, window_size);
-        
+/*        
         let text = TextBuilder::new(
             center_widget_builder()
                 .with_max_size(Vector2::new(200.0, f32::INFINITY))
@@ -59,22 +62,14 @@ impl PluginConstructor for GameConstructor {
         .with_wrap(WrapMode::Word)
         .with_text("about you")
         .build(ctx);
-    
-    
+  */  
+        let nine = nine_patch_widget::NinePatchBuilder::new(center_widget_builder())
+            .with_texture(into_gui_texture(
+                resource_manager.request::<Texture, _>("data/9boxblur.png"),
+            ))
+            .build(ctx);
 
 
-        let _nine = create_nine_box(
-            ctx,
-            resource_manager,
-            "data/9boxblur.png",
-            40,
-            41,
-            40,
-            41,
-            81,
-            81,
-            Some(text)
-        );
         let scripts = script::load_from_file("data/scripts.json").unwrap();
         /*
         println!("\n\n");
@@ -86,7 +81,7 @@ impl PluginConstructor for GameConstructor {
 
     
 
-        Box::new(Game { button, text, scripts, current_script_pos: None })
+        Box::new(Game { button, text:nine, scripts, current_script_pos: None })
     }
 }
 
@@ -294,26 +289,26 @@ pub fn process_script(script_pos: &ScriptPos, scripts: &script::Scripts, ui: &&m
         };
         next_index += 1;
         match item {
-            script::ScriptItem::Action(blurp) => {
+            script::ScriptItem::Action(_blurp) => {
                 
             }
-            script::ScriptItem::AddQuest(blurp) => {
+            script::ScriptItem::AddQuest(_blurp) => {
                 
             }
-            script::ScriptItem::Animation(blurp) => {
+            script::ScriptItem::Animation(_blurp) => {
                 
             }
             script::ScriptItem::Blurp(blurp) => {
                 show_dialogue(ui, dialogue_box, blurp.text.clone());
                 break;
             }
-            script::ScriptItem::Choice(blurp) => {
+            script::ScriptItem::Choice(_blurp) => {
                 
             }
-            script::ScriptItem::Cue(blurp) => {
+            script::ScriptItem::Cue(_blurp) => {
                 
             }
-            script::ScriptItem::End(blurp) => {
+            script::ScriptItem::End(_blurp) => {
                 
             }
             script::ScriptItem::Jump(jump) => {
@@ -331,7 +326,7 @@ pub fn process_script(script_pos: &ScriptPos, scripts: &script::Scripts, ui: &&m
                     return None;
                 }
             }
-            script::ScriptItem::OfferTopics(blurp) => {
+            script::ScriptItem::OfferTopics(_blurp) => {
                
             }
         }

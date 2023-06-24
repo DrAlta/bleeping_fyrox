@@ -1,216 +1,45 @@
-#![allow(dead_code)]
+
 use fyrox::gui::{
     core::{algebra::Vector2, math::Rect, pool::Handle, scope_profile},
-    draw::{CommandTexture, Draw, DrawingContext},
+    draw::{CommandTexture, Draw, DrawingContext, SharedTexture},
     message::UiMessage,
     widget::{Widget, WidgetBuilder},
     BuildContext, Control, UiNode, UserInterface,
 };
 use std::{
     any::{Any, TypeId},
-    cell::RefCell,
     ops::{Deref, DerefMut},
 };
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum SizeMode {
-    Strict,
+    Strict(u32),
     Auto,
-    Stretch,
 }
 
-#[derive(Clone, Copy, PartialEq)]
-pub struct GridDimension {
-    pub size_mode: SizeMode,
-    pub desired_size: f32,
-    pub actual_size: f32,
-    pub location: f32,
-}
 
-impl GridDimension {
-    pub fn generic(size_mode: SizeMode, desired_size: f32) -> Self {
-        Self {
-            size_mode,
-            desired_size,
-            actual_size: 0.0,
-            location: 0.0,
-        }
-    }
 
-    pub fn strict(desired_size: f32) -> Self {
-        Self::generic(SizeMode::Strict, desired_size)
-    }
-
-    pub fn stretch() -> Self {
-        Self::generic(SizeMode::Stretch, 0.0)
-    }
-
-    pub fn auto() -> Self {
-        Self::generic(SizeMode::Auto, 0.0)
-    }
-}
-
-pub type Column = GridDimension;
-pub type Row = GridDimension;
 
 /// Automatically arranges children by rows and columns
 #[derive(Clone)]
-pub struct Grid {
+pub struct NinePatch {
     pub widget: Widget,
-    pub rows: RefCell<Vec<Row>>,
-    pub columns: RefCell<Vec<Column>>,
-    pub draw_border: bool,
-    pub border_thickness: f32,
-    pub cells: RefCell<Vec<Cell>>,
-    pub groups: RefCell<[Vec<usize>; 4]>,
+    texture: Option<SharedTexture>,
+    pub x_size_mode: SizeMode,
+    pub y_size_mode: SizeMode,
+    pub x_fence_post1_pixel: u32,
+    pub x_fence_post2_pixel: u32,
+    pub y_fence_post1_pixel: u32,
+    pub y_fence_post2_pixel: u32,
+    pub image_width: u32,
+    pub image_height: u32,
+
 }
 
-fyrox::gui::define_widget_deref!(Grid);
+fyrox::gui::define_widget_deref!(NinePatch);
 
-#[derive(Clone)]
-pub struct Cell {
-    pub nodes: Vec<Handle<UiNode>>,
-    pub width_constraint: Option<f32>,
-    pub height_constraint: Option<f32>,
-    pub row_index: usize,
-    pub column_index: usize,
-}
 
-fn group_index(row_size_mode: SizeMode, column_size_mode: SizeMode) -> usize {
-    match (row_size_mode, column_size_mode) {
-        (SizeMode::Strict, SizeMode::Strict)
-        | (SizeMode::Strict, SizeMode::Auto)
-        | (SizeMode::Auto, SizeMode::Strict)
-        | (SizeMode::Auto, SizeMode::Auto) => 0,
-        (SizeMode::Stretch, SizeMode::Auto) => 1,
-        (SizeMode::Strict, SizeMode::Stretch) | (SizeMode::Auto, SizeMode::Stretch) => 2,
-        (SizeMode::Stretch, SizeMode::Strict) | (SizeMode::Stretch, SizeMode::Stretch) => 3,
-    }
-}
-
-fn choose_constraint(dimension: &GridDimension, available_size: f32) -> Option<f32> {
-    match dimension.size_mode {
-        SizeMode::Strict => Some(dimension.desired_size),
-        SizeMode::Auto => Some(available_size),
-        SizeMode::Stretch => None,
-    }
-}
-
-fn choose_actual_size(
-    dimension: &GridDimension,
-    cell_size: f32,
-    available_size: f32,
-    stretch_size: f32,
-) -> f32 {
-    let current_actual_size = dimension.actual_size;
-    match dimension.size_mode {
-        SizeMode::Strict => dimension.desired_size,
-        SizeMode::Auto => current_actual_size.max(cell_size),
-        SizeMode::Stretch => current_actual_size.max(if available_size.is_infinite() {
-            cell_size
-        } else {
-            stretch_size
-        }),
-    }
-}
-
-fn calc_total_size_of_non_stretch_dims(
-    dims: &[GridDimension],
-    children: &[Handle<UiNode>],
-    ui: &UserInterface,
-    desired_size_fetcher: fn(&UiNode, usize) -> Option<f32>,
-) -> f32 {
-    let mut preset_size = 0.0;
-
-    for (i, dim) in dims.iter().enumerate() {
-        if dim.size_mode == SizeMode::Strict {
-            preset_size += dim.desired_size;
-        } else if dim.size_mode == SizeMode::Auto {
-            let mut dim_size = 0.0f32;
-            for child_handle in children {
-                let child = ui.try_get_node(*child_handle).unwrap(); //.nodes.borrow(*child_handle);
-                if let Some(desired_size) = (desired_size_fetcher)(child, i) {
-                    dim_size = dim_size.max(desired_size);
-                }
-            }
-            preset_size += dim_size;
-        }
-    }
-
-    preset_size
-}
-
-fn count_stretch_dims(dims: &[GridDimension]) -> usize {
-    let mut stretch_sized_dims = 0;
-    for dim in dims.iter() {
-        if dim.size_mode == SizeMode::Stretch {
-            stretch_sized_dims += 1;
-        }
-    }
-    stretch_sized_dims
-}
-
-fn calc_avg_size_for_stretch_dim(
-    dims: &[GridDimension],
-    children: &[Handle<UiNode>],
-    available_size: f32,
-    ui: &UserInterface,
-    desired_size_fetcher: fn(&UiNode, usize) -> Option<f32>,
-) -> f32 {
-    let preset_size = calc_total_size_of_non_stretch_dims(dims, children, ui, desired_size_fetcher);
-
-    let rest_width = available_size - preset_size;
-
-    let stretch_sized_dims = count_stretch_dims(dims);
-    if stretch_sized_dims > 0 {
-        rest_width / stretch_sized_dims as f32
-    } else {
-        0.0
-    }
-}
-
-fn fetch_width(child: &UiNode, i: usize) -> Option<f32> {
-    if child.column() == i && child.visibility() {
-        Some(child.desired_size().x)
-    } else {
-        None
-    }
-}
-
-fn fetch_height(child: &UiNode, i: usize) -> Option<f32> {
-    if child.row() == i && child.visibility() {
-        Some(child.desired_size().y)
-    } else {
-        None
-    }
-}
-
-fn arrange_dims(dims: &mut [GridDimension], final_size: f32) {
-    let mut preset_width = 0.0;
-    for dim in dims.iter() {
-        if dim.size_mode == SizeMode::Auto || dim.size_mode == SizeMode::Strict {
-            preset_width += dim.actual_size;
-        }
-    }
-
-    let stretch_count = count_stretch_dims(dims);
-    let avg_size = if stretch_count > 0 {
-        (final_size - preset_width) / stretch_count as f32
-    } else {
-        0.0
-    };
-
-    let mut location = 0.0;
-    for dim in dims.iter_mut() {
-        dim.location = location;
-        location += match dim.size_mode {
-            SizeMode::Strict | SizeMode::Auto => dim.actual_size,
-            SizeMode::Stretch => avg_size,
-        };
-    }
-}
-
-impl Control for Grid {
+impl Control for NinePatch {
     fn query_component(&self, type_id: TypeId) -> Option<&dyn Any> {
         if type_id == TypeId::of::<Self>() {
             Some(self)
@@ -222,177 +51,130 @@ impl Control for Grid {
     fn measure_override(&self, ui: &UserInterface, available_size: Vector2<f32>) -> Vector2<f32> {
         scope_profile!();
 
-        let mut rows = self.rows.borrow_mut();
-        let mut columns = self.columns.borrow_mut();
-        let mut groups = self.groups.borrow_mut();
-        let mut cells = self.cells.borrow_mut();
+        let column3_width_pixels = (self.image_width - self.x_fence_post2_pixel) as f32;
+        let row3_height_pixels = (self.image_height - self.y_fence_post2_pixel) as f32;
 
-        // In case of no rows or columns, grid acts like default panel.
-        if columns.is_empty() || rows.is_empty() {
-            return self.widget.measure_override(ui, available_size);
+        let x_overflow = self.x_fence_post1_pixel as f32 + column3_width_pixels;
+        let y_overflow = self.y_fence_post1_pixel as f32 + row3_height_pixels;
+
+        let mut size: Vector2<f32> = Vector2::new(self.image_width as f32, self.image_height as f32);
+
+        
+
+        let mut center_size = Vector2::new(available_size.x - x_overflow, available_size.y - y_overflow);
+
+        if let SizeMode::Strict(strict_x) = self.x_size_mode {
+            center_size.x = center_size.x.min(strict_x as f32 - x_overflow);
         }
 
-        for row in rows.iter_mut() {
-            row.actual_size = 0.0;
-        }
-        for column in columns.iter_mut() {
-            column.actual_size = 0.0;
-        }
-        for group in groups.iter_mut() {
-            group.clear();
-        }
-        cells.clear();
-
-        for (column_index, column) in columns.iter().enumerate() {
-            for (row_index, row) in rows.iter().enumerate() {
-                groups[group_index(row.size_mode, column.size_mode)].push(cells.len());
-
-                cells.push(Cell {
-                    nodes: self
-                        .children()
-                        .iter()
-                        .filter_map(|&c| {
-                            let child_ref = ui.node(c);
-                            if child_ref.row() == row_index && child_ref.column() == column_index {
-                                Some(c)
-                            } else {
-                                None
-                            }
-                        })
-                        .collect(),
-                    width_constraint: choose_constraint(column, available_size.x),
-                    height_constraint: choose_constraint(row, available_size.y),
-                    row_index,
-                    column_index,
-                })
-            }
+        if let SizeMode::Strict(strict_y) = self.y_size_mode {
+            center_size.y = center_size.y.min(strict_y as f32 - y_overflow);
         }
 
-        for group in groups.iter() {
-            for &cell_index in group.iter() {
-                let cell = &cells[cell_index];
-
-                let stretch_sized_width = calc_avg_size_for_stretch_dim(
-                    &columns,
-                    self.children(),
-                    available_size.x,
-                    ui,
-                    fetch_width,
-                );
-
-                let stretch_sized_height = calc_avg_size_for_stretch_dim(
-                    &rows,
-                    self.children(),
-                    available_size.y,
-                    ui,
-                    fetch_height,
-                );
-
-                let child_constraint = Vector2::new(
-                    cell.width_constraint.unwrap_or(stretch_sized_width),
-                    cell.height_constraint.unwrap_or(stretch_sized_height),
-                );
-
-                let mut cell_size = Vector2::<f32>::default();
-                for &node in cell.nodes.iter() {
-                    ui.measure_node(node, child_constraint);
-                    let node_ref = ui.node(node);
-                    let desired_size = node_ref.desired_size();
-                    cell_size.x = cell_size.x.max(desired_size.x);
-                    cell_size.y = cell_size.y.max(desired_size.y);
-                }
-
-                let column = &mut columns[cell.column_index];
-                column.actual_size =
-                    choose_actual_size(column, cell_size.x, available_size.x, stretch_sized_width);
-
-                let row = &mut rows[cell.row_index];
-                row.actual_size =
-                    choose_actual_size(row, cell_size.y, available_size.y, stretch_sized_height);
-            }
+        for &child in self.children.iter() {
+            ui.measure_node(child, center_size);
+            let desired_size = ui.node(child).desired_size();
+            size.x = size.x.max(desired_size.x.ceil());
+            size.y = size.y.max(desired_size.y.ceil());
         }
+        //println!("patch measure:{size:?}");
+        size
 
-        let mut desired_size: Vector2<f32> = Vector2::default();
-        // Step 4. Calculate desired size of grid.
-        for column in columns.iter() {
-            desired_size.x += column.actual_size;
-        }
-        for row in rows.iter() {
-            desired_size.y += row.actual_size;
-        }
-        desired_size.y = desired_size.y.ceil();
-        desired_size.x = desired_size.x.ceil();
-        desired_size
     }
+
 
     fn arrange_override(&self, ui: &UserInterface, final_size: Vector2<f32>) -> Vector2<f32> {
         scope_profile!();
+        let column3_width_pixels = (self.image_width - self.x_fence_post2_pixel) as f32;
+    
+        let row3_height_pixels = (self.image_height - self.y_fence_post2_pixel) as f32;
 
-        let mut columns = self.columns.borrow_mut();
-        let mut rows = self.rows.borrow_mut();
+        let final_rect = Rect::new(self.x_fence_post1_pixel as f32, self.y_fence_post2_pixel as f32, final_size.x - column3_width_pixels, final_size.y - row3_height_pixels);
 
-        if columns.is_empty() || rows.is_empty() {
-            let rect = Rect::new(0.0, 0.0, final_size.x, final_size.y);
-            for child_handle in self.widget.children() {
-                ui.arrange_node(*child_handle, &rect);
-            }
-            return final_size;
-        }
-
-        arrange_dims(&mut columns, final_size.x);
-        arrange_dims(&mut rows, final_size.y);
-
-        for child_handle in self.widget.children() {
-            let child = ui.try_get_node(*child_handle).unwrap(); //.nodes.borrow(*child_handle);
-            if let Some(column) = columns.get(child.column()) {
-                if let Some(row) = rows.get(child.row()) {
-                    ui.arrange_node(
-                        *child_handle,
-                        &Rect::new(
-                            column.location,
-                            row.location,
-                            column.actual_size,
-                            row.actual_size,
-                        ),
-                    );
-                }
-            }
+        for &child in self.children.iter() {
+            ui.arrange_node(child, &final_rect);
         }
 
         final_size
     }
-
+ 
     fn draw(&self, drawing_context: &mut DrawingContext) {
-        if self.draw_border {
-            let bounds = self.widget.bounding_rect();
+        if self.texture.is_some() {
+            let patch_bounds = self.widget.bounding_rect();
 
-            let left_top = Vector2::new(bounds.x(), bounds.y());
-            let right_top = Vector2::new(bounds.x() + bounds.w(), bounds.y());
-            let right_bottom = Vector2::new(bounds.x() + bounds.w(), bounds.y() + bounds.h());
-            let left_bottom = Vector2::new(bounds.x(), bounds.y() + bounds.h());
 
-            drawing_context.push_line(left_top, right_top, self.border_thickness);
-            drawing_context.push_line(right_top, right_bottom, self.border_thickness);
-            drawing_context.push_line(right_bottom, left_bottom, self.border_thickness);
-            drawing_context.push_line(left_bottom, left_top, self.border_thickness);
+            let column1_width_pixels = self.x_fence_post1_pixel as f32;
+            let column2_width_pixels = (self.x_fence_post2_pixel - self.x_fence_post1_pixel) as f32;
+            let column3_width_pixels = (self.image_width - self.x_fence_post2_pixel) as f32;
+        
+            let row1_height_pixels = self.y_fence_post1_pixel as f32;
+            let row2_height_pixels = (self.y_fence_post2_pixel - self.y_fence_post1_pixel) as f32;
+            let row3_height_pixels = (self.image_height - self.y_fence_post2_pixel) as f32;
+        
+            let column1_width_uv = column1_width_pixels as f32 / self.image_width as f32;
+            let column2_width_uv = column2_width_pixels as f32 / self.image_width as f32;
+            let column3_width_uv = column3_width_pixels as f32 / self.image_width as f32;
+        
+            let row1_height_uv = row1_height_pixels as f32 / self.image_height as f32;
+            let row2_height_uv = row2_height_pixels as f32 / self.image_height as f32;
+            let row3_height_uv = row3_height_pixels as f32 / self.image_height as f32;
+        
+            let x_fence_post1_uv = self.x_fence_post1_pixel as f32 / self.image_width as f32;
+            let x_fence_post2_uv = self.x_fence_post2_pixel as f32 / self.image_width as f32;
+            let y_fence_post1_uv = self.y_fence_post1_pixel as f32 / self.image_height as f32;
+            let y_fence_post2_uv = self.y_fence_post2_pixel as f32 / self.image_height as f32;
 
-            for column in self.columns.borrow().iter() {
-                let a = Vector2::new(bounds.x() + column.location, bounds.y());
-                let b = Vector2::new(bounds.x() + column.location, bounds.y() + bounds.h());
-                drawing_context.push_line(a, b, self.border_thickness);
-            }
-            for row in self.rows.borrow().iter() {
-                let a = Vector2::new(bounds.x(), bounds.y() + row.location);
-                let b = Vector2::new(bounds.x() + bounds.w(), bounds.y() + row.location);
-                drawing_context.push_line(a, b, self.border_thickness);
-            }
+            let x_overflow = column1_width_pixels + column3_width_pixels;
+            let y_overlfow = row1_height_pixels + row3_height_pixels;
 
-            drawing_context.commit(
-                self.clip_bounds(),
-                self.widget.foreground(),
-                CommandTexture::None,
-                None,
+            //top left
+            let bounds = Rect { 
+                position: patch_bounds.position, 
+                size: Vector2::new(
+                    column1_width_pixels, 
+                    row1_height_pixels
+                ) 
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(0.0, 0.0),
+                Vector2::new(x_fence_post1_uv, 0.0),
+                Vector2::new(x_fence_post1_uv, y_fence_post1_uv),
+                Vector2::new(0.0, y_fence_post1_uv),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background.clone(), 
+                drawing_context
             );
+
+            //top center
+            let bounds = Rect { 
+                position: Vector2::new(
+                    patch_bounds.position.x + column1_width_pixels,
+                    patch_bounds.position.y
+                ), 
+                size: Vector2::new(
+                    patch_bounds.size.x - x_overflow, 
+                    row1_height_pixels
+                )
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(x_fence_post1_uv, 0.0),
+                Vector2::new(x_fence_post2_uv, 0.0),
+                Vector2::new(x_fence_post2_uv, y_fence_post1_uv),
+                Vector2::new(x_fence_post1_uv, y_fence_post1_uv),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background.clone(), 
+                drawing_context)
+
         }
     }
 
@@ -401,65 +183,61 @@ impl Control for Grid {
     }
 }
 
-pub struct GridBuilder {
+pub struct NinePatchBuilder {
     widget_builder: WidgetBuilder,
-    rows: Vec<Row>,
-    columns: Vec<Column>,
-    draw_border: bool,
-    border_thickness: f32,
+    texture: Option<SharedTexture>,
+    pub x_size_mode: SizeMode,
+    pub y_size_mode: SizeMode,
+    pub x_fence_post1_pixel: u32,
+    pub x_fence_post2_pixel: u32,
+    pub y_fence_post1_pixel: u32,
+    pub y_fence_post2_pixel: u32,
+    pub image_width: u32,
+    pub image_height: u32,
 }
 
-impl GridBuilder {
+impl NinePatchBuilder {
     pub fn new(widget_builder: WidgetBuilder) -> Self {
         Self {
             widget_builder,
-            rows: Vec::new(),
-            columns: Vec::new(),
-            draw_border: false,
-            border_thickness: 1.0,
+            texture: None,
+            x_size_mode: SizeMode::Auto,
+            y_size_mode: SizeMode::Auto,
+            x_fence_post1_pixel: 40,
+            x_fence_post2_pixel: 41,
+            y_fence_post1_pixel: 40,
+            y_fence_post2_pixel: 41,
+            image_width: 81,
+            image_height: 81,
         }
     }
 
-    pub fn add_row(mut self, row: Row) -> Self {
-        self.rows.push(row);
-        self
-    }
-
-    pub fn add_column(mut self, column: Column) -> Self {
-        self.columns.push(column);
-        self
-    }
-
-    pub fn add_rows(mut self, mut rows: Vec<Row>) -> Self {
-        self.rows.append(&mut rows);
-        self
-    }
-
-    pub fn add_columns(mut self, mut columns: Vec<Column>) -> Self {
-        self.columns.append(&mut columns);
-        self
-    }
-
-    pub fn draw_border(mut self, value: bool) -> Self {
-        self.draw_border = value;
-        self
-    }
-
-    pub fn with_border_thickness(mut self, value: f32) -> Self {
-        self.border_thickness = value;
+    pub fn with_texture(mut self, texture: SharedTexture) -> Self {
+        self.texture = Some(texture);
         self
     }
 
     pub fn build(self, ui: &mut BuildContext) -> Handle<UiNode> {
-        let grid = Grid {
+        let grid = NinePatch {
             widget: self.widget_builder.build(),
-            rows: RefCell::new(self.rows),
-            columns: RefCell::new(self.columns),
-            draw_border: self.draw_border,
-            border_thickness: self.border_thickness,
-            cells: Default::default(),
-            groups: Default::default(),
+            texture: self.texture,
+            x_size_mode: self.x_size_mode,
+            y_size_mode: self.y_size_mode,
+            x_fence_post1_pixel: self.x_fence_post1_pixel,
+            x_fence_post2_pixel: self.x_fence_post2_pixel,
+            y_fence_post1_pixel: self.y_fence_post1_pixel,
+            y_fence_post2_pixel: self.y_fence_post2_pixel,
+            image_width: self.image_width,
+            image_height: self.image_height,
+            
         };
         ui.add_node(UiNode::new(grid))
     }
 }
+fn draw_image(image:&SharedTexture, bounds:Rect<f32>, tex_coords: &[Vector2<f32>; 4], clip_bounds: Rect<f32>, background: fyrox::gui::brush::Brush, drawing_context: &mut DrawingContext) {
+    drawing_context.push_rect_filled(&bounds, Some(tex_coords));
+    let texture = CommandTexture::Texture(image.clone());
+    drawing_context.commit(clip_bounds, background, texture, None);
+}
+
+//draw_image(self.texture.unwrap(), bounds, tex_coords, self.clip_bounds(), self.widget.background, drawing_context)
