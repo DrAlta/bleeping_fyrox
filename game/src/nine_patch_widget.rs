@@ -146,7 +146,7 @@ impl Control for NinePatch {
                 bounds, 
                 &tex_coords, 
                 self.clip_bounds(), 
-                self.widget.background.clone(), 
+                self.widget.background(), 
                 drawing_context
             );
 
@@ -172,9 +172,188 @@ impl Control for NinePatch {
                 bounds, 
                 &tex_coords, 
                 self.clip_bounds(), 
-                self.widget.background.clone(), 
-                drawing_context)
+                self.widget.background(), 
+                drawing_context);
 
+            //top right
+            let bounds = Rect { 
+                position: Vector2::new(
+                    (patch_bounds.position.x + patch_bounds.size.x) - column3_width_pixels,
+                    patch_bounds.position.y
+                ), 
+                size: Vector2::new(
+                    column3_width_pixels, 
+                    row1_height_pixels
+                )
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(x_fence_post2_uv, 0.0),
+                Vector2::new(1.0, 0.0),
+                Vector2::new(1.0, y_fence_post1_uv),
+                Vector2::new(x_fence_post2_uv, y_fence_post1_uv),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context);
+            ////////////////////////////////////////////////////////////////////////////////
+            //middle left
+            let bounds = Rect { 
+                position: Vector2::new(
+                    patch_bounds.position.x, 
+                    patch_bounds.position.y + row1_height_pixels
+                ),
+                size: Vector2::new(
+                    column1_width_pixels, 
+                    patch_bounds.size.y - y_overlfow
+                ) 
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(0.0, y_fence_post1_uv),
+                Vector2::new(x_fence_post1_uv, y_fence_post1_uv),
+                Vector2::new(x_fence_post1_uv, y_fence_post2_uv),
+                Vector2::new(0.0, y_fence_post2_uv),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context
+            );
+
+            //middle center
+            let bounds = Rect { 
+                position: Vector2::new(
+                    patch_bounds.position.x + column1_width_pixels,
+                    patch_bounds.position.y + row1_height_pixels
+                ), 
+                size: Vector2::new(
+                    patch_bounds.size.x - x_overflow, 
+                    patch_bounds.size.y - y_overlfow
+                )
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(x_fence_post1_uv, y_fence_post1_uv),
+                Vector2::new(x_fence_post2_uv, y_fence_post1_uv),
+                Vector2::new(x_fence_post2_uv, y_fence_post2_uv),
+                Vector2::new(x_fence_post1_uv, y_fence_post2_uv),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context);
+
+            //middle right
+            let bounds = Rect { 
+                position: Vector2::new(
+                    (patch_bounds.position.x + patch_bounds.size.x) - column3_width_pixels,
+                    patch_bounds.position.y + row1_height_pixels
+                ), 
+                size: Vector2::new(
+                    column3_width_pixels, 
+                    patch_bounds.size.y - y_overlfow
+                )
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(x_fence_post2_uv, y_fence_post1_uv),
+                Vector2::new(1.0, y_fence_post1_uv),
+                Vector2::new(1.0, y_fence_post2_uv),
+                Vector2::new(x_fence_post2_uv, y_fence_post2_uv),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context);
+
+            ////////////////////////////////////////////////////////////////////////////////
+            //bottom left
+            let bounds = Rect { 
+                position: Vector2::new(
+                    patch_bounds.position.x, 
+                    (patch_bounds.position.y + patch_bounds.size.y) - row3_height_pixels
+                ),
+                size: Vector2::new(
+                    column1_width_pixels, 
+                    row3_height_pixels
+                ) 
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(0.0, y_fence_post2_uv),
+                Vector2::new(x_fence_post1_uv, y_fence_post2_uv),
+                Vector2::new(x_fence_post1_uv, 1.0),
+                Vector2::new(0.0, 1.0),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context
+            );
+
+            //bottom center
+            let bounds = Rect { 
+                position: Vector2::new(
+                    patch_bounds.position.x + column1_width_pixels,
+                    (patch_bounds.position.y + patch_bounds.size.y) - row3_height_pixels
+                ), 
+                size: Vector2::new(
+                    patch_bounds.size.x - x_overflow, 
+                    row3_height_pixels
+                )
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(x_fence_post1_uv, y_fence_post2_uv),
+                Vector2::new(x_fence_post2_uv, y_fence_post2_uv),
+                Vector2::new(x_fence_post2_uv, 1.0),
+                Vector2::new(x_fence_post1_uv, 1.0),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context);
+
+            //bottom right
+            let bounds = Rect { 
+                position: Vector2::new(
+                    (patch_bounds.position.x + patch_bounds.size.x) - column3_width_pixels,
+                    (patch_bounds.position.y + patch_bounds.size.y) - row3_height_pixels
+                ), 
+                size: Vector2::new(
+                    column3_width_pixels, 
+                    row3_height_pixels
+                )
+            };
+            let tex_coords= [
+                Vector2::<f32>::new(x_fence_post2_uv, y_fence_post2_uv),
+                Vector2::new(1.0, y_fence_post2_uv),
+                Vector2::new(1.0, 1.0),
+                Vector2::new(x_fence_post2_uv, 1.0),
+            ];
+            draw_image(
+                &self.texture.as_ref().unwrap(), 
+                bounds, 
+                &tex_coords, 
+                self.clip_bounds(), 
+                self.widget.background(), 
+                drawing_context);
+
+            //end drawing
         }
     }
 

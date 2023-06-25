@@ -30,7 +30,7 @@ use fyrox::{
         stack_panel::StackPanelBuilder,
         widget::{WidgetBuilder, WidgetMessage},
         BuildContext,
-        UiNode, text::{TextBuilder}, formatted_text::WrapMode,
+        UiNode, text::{TextBuilder}, formatted_text::WrapMode, image::ImageBuilder,
     },
     plugin::{Plugin, PluginConstructor, PluginContext, PluginRegistrationContext},
     scene::Scene, resource::texture::Texture, utils::into_gui_texture,
@@ -63,9 +63,10 @@ impl PluginConstructor for GameConstructor {
         .with_text("about you")
         .build(ctx);
   */  
-        let nine = nine_patch_widget::NinePatchBuilder::new(center_widget_builder())
-            .with_texture(into_gui_texture(
-                resource_manager.request::<Texture, _>("data/9boxblur.png"),
+  let nine = nine_patch_widget::NinePatchBuilder::new(center_widget_builder())
+//  let nine = ImageBuilder::new(center_widget_builder())
+  .with_texture(into_gui_texture(
+                resource_manager.request::<Texture, _>("data/9test.png"),
             ))
             .build(ctx);
 
