@@ -51,11 +51,14 @@ impl Control for NinePatch {
     fn measure_override(&self, ui: &UserInterface, available_size: Vector2<f32>) -> Vector2<f32> {
         scope_profile!();
 
+        let column1_width_pixels = self.x_fence_post1_pixel as f32;
         let column3_width_pixels = (self.image_width - self.x_fence_post2_pixel) as f32;
+    
+        let row1_height_pixels = self.y_fence_post1_pixel as f32;
         let row3_height_pixels = (self.image_height - self.y_fence_post2_pixel) as f32;
 
-        let x_overflow = self.x_fence_post1_pixel as f32 + column3_width_pixels;
-        let y_overflow = self.y_fence_post1_pixel as f32 + row3_height_pixels;
+        let x_overflow = column1_width_pixels + column3_width_pixels;
+        let y_overflow = row1_height_pixels as f32 + row3_height_pixels;
 
         let mut size: Vector2<f32> = Vector2::new(self.image_width as f32, self.image_height as f32);
 
@@ -85,11 +88,16 @@ impl Control for NinePatch {
 
     fn arrange_override(&self, ui: &UserInterface, final_size: Vector2<f32>) -> Vector2<f32> {
         scope_profile!();
+        let column1_width_pixels = self.x_fence_post1_pixel as f32;
         let column3_width_pixels = (self.image_width - self.x_fence_post2_pixel) as f32;
     
+        let row1_height_pixels = self.y_fence_post1_pixel as f32;
         let row3_height_pixels = (self.image_height - self.y_fence_post2_pixel) as f32;
 
-        let final_rect = Rect::new(self.x_fence_post1_pixel as f32, self.y_fence_post2_pixel as f32, final_size.x - column3_width_pixels, final_size.y - row3_height_pixels);
+        let x_overflow = column1_width_pixels + column3_width_pixels;
+        let y_overflow = row1_height_pixels as f32 + row3_height_pixels;
+
+        let final_rect = Rect::new(column1_width_pixels, row1_height_pixels , final_size.x - x_overflow, final_size.y - y_overflow);
 
         for &child in self.children.iter() {
             ui.arrange_node(child, &final_rect);
