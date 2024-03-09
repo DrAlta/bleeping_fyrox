@@ -5,5 +5,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-fyrox = "0.30.0"
+fyrox = {workspace = true}
 bleeping_fyrox = { path = "../game" }

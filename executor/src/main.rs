@@ -1,6 +1,6 @@
 //! Executor with your game connected to it as a plugin.
-use bleeping_fyrox::GameConstructor;
 use fyrox::engine::executor::Executor;
+use bleeping_fyrox::GameConstructor;
 
 fn main() {
     let mut executor = Executor::new();

@@ -5,4 +5,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-fyrox = "0.30.0"
+fyrox = {workspace = true}
+serde_jsonrc = "0.1.0"
